@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class UserFactory {
     public static ArrayList<String> getTypeNameList(){
-        return new ArrayList<>(Arrays.asList("Integer", "Datetime"));
+        return new ArrayList<>(Arrays.asList("integer", "datetime"));
     }
 
     public static UserTypeFactory getBuilderByName(String name){
