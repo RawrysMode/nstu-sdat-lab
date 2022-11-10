@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class Serialize {
+public class Serialization {
 
     public static void loadToFile(Heap heap){
         try {
