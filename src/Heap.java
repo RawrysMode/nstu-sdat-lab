@@ -105,7 +105,7 @@ public class Heap implements Serializable {
     }
 
     public UserType removeNode(int index) { // удалить элемент по индексу массива
-        if (index >= 0 && currentSize >= index) {
+        if (index > 0 && currentSize > index) {
             UserType root = heapArray.get(index);
             heapArray.set(index, heapArray.get(--currentSize)); // задаём элементу с переданным индексом, значение последнего элемента
             heapArray.remove(currentSize);
@@ -116,9 +116,9 @@ public class Heap implements Serializable {
         return null;
     }
 
-    public boolean changeNode(int index, String newValue) {
+    public void changeNode(int index, String newValue) {
         if (index < 0 || currentSize <= index) {
-            return false;
+            return;
         }
 
         object = userTypeFactory.create();
@@ -132,7 +132,6 @@ public class Heap implements Serializable {
         } else {
             displaceDown(index);
         }
-        return true;
     }
 
     public void getByIndex(int index){
