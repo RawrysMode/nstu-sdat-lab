@@ -1,5 +1,7 @@
 package factory;
 
-public interface UserTypeFactory {
+import java.io.Serializable;
+
+public interface UserTypeFactory extends Serializable {
     UserType create();
 }
