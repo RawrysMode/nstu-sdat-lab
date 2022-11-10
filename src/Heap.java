@@ -8,34 +8,33 @@ import java.util.ArrayList;
 public class Heap implements Serializable {
     //private final factory.UserType[] heapArray; // массив со всеми вершинами
     private int currentSize; // количество узлов массиве
-    private final String userType;
+    UserTypeFactory userTypeFactory;
+    UserType object;
 
     ArrayList<UserType> heapArray;
 
     public Heap(String userType) { // создание пустой пирамиды
-        this.userType = userType;
         this.currentSize = 0;
-        heapArray = new ArrayList<>();
+        this.heapArray = new ArrayList<>();
+        userTypeFactory = UserFactory.getBuilderByName(userType);
     }
 
     public void printHeap() { // отображение перамиды в консоль
-        System.out.println("Массив значений: ");
-
+        System.out.print("Array: [");
         for (int n = 0; n < currentSize; n++) {
             if (heapArray.get(n) != null) {
-                System.out.println(heapArray.get(n).readValue() + " ");
-            }
-            else {
-                System.out.println("-");
+                System.out.print(" " + heapArray.get(n).readValue());
+            } else {
+                System.out.print("-");
             }
         }
-        System.out.println();
+        System.out.println(" ]");
 
         int countOfGaps = 32;
         int itemsPerRow = 1;
         int columnNumber = 0; // номер элемента в данной строке
-        String lines = "___________________________________________________________________";
-        System.out.println(lines);
+
+        System.out.println("\n" + "HEAP: ");
         for (int i = 0; i < currentSize; i++) {
             if (columnNumber == 0) {  // проверяем первый элемент ли в текущей строке
                 for (int k = 0; k < countOfGaps; k++) { // добавляем предшествующие пробелы
@@ -50,19 +49,17 @@ public class Heap implements Serializable {
                 itemsPerRow *= 2; // указываем, что элементов может быть вдвое больше
                 columnNumber = 0; // сбрасываем счётчик для текущего элемента строки
                 System.out.println(); // переходим на нову строку
-            }
-            else { //переход к следующему элементу
+            } else { //переход к следующему элементу
                 for (int k = 0; k < countOfGaps * 2 - 2; k++) {
                     System.out.print(' '); // добавляем оступы
                 }
             }
         }
-        System.out.println("\n" + lines); // нижний пункир
+        System.out.println();
     }
 
     public void insertNode(String string) { // вставка нового значения
-        UserTypeFactory userTypeFactory = UserFactory.getBuilderByName(userType);
-        UserType object = userTypeFactory.create();
+        object = userTypeFactory.create();
         object.parseValue(string);
 
         heapArray.add(object);// вершину задём в самый низ дерева
@@ -106,30 +103,43 @@ public class Heap implements Serializable {
         }
         heapArray.set(index, top);
     }
+
+    public UserType removeNode(int index) { // удалить элемент по индексу массива
+        if (index >= 0 && currentSize >= index) {
+            UserType root = heapArray.get(index);
+            heapArray.set(index, heapArray.get(--currentSize)); // задаём элементу с переданным индексом, значение последнего элемента
+            heapArray.remove(currentSize);
+            //heapArray.set(currentSize, null);
+            displaceDown(index);// проталкиваем вниз новый элемент, чтобы он должное ему место
+            return root;
+        }
+        return null;
+    }
+
+    public boolean changeNode(int index, String newValue) {
+        if (index < 0 || currentSize <= index) {
+            return false;
+        }
+
+        object = userTypeFactory.create();
+        object.parseValue(newValue);
+
+        UserType oldValue = heapArray.get(index); // сохраняем старое значение
+        heapArray.set(index, object); // присваиваем новое
+
+        if(object.getTypeComparator().compare(oldValue, object) < 0){
+            displaceUp(index);
+        } else {
+            displaceDown(index);
+        }
+        return true;
+    }
+
+    public void getByIndex(int index){
+        System.out.println("\n" + "returned value index[" + index + "]: " + heapArray.get(index) + "\n");
+    }
+
 }
 
 
-    /*public void removeNode(int index) { // удалить элемент по индексу массива
-        if(index > 0 && currentSize > index) {
-            factory.UserType root = heapArray[index];
-            heapArray[index] = heapArray[--currentSize]; // задаём элементу с переданным индексом, значение последнего элемента
-            heapArray[currentSize] = null;// последний элемент удаляем
-            displaceDown(index);// проталкиваем вниз новый элемент, чтобы он должное ему место
-        }
-    }*/
 
-    /*public boolean changeNode(int index, int newValue) {
-        if (index < 0 || currentSize<=index) {
-            return false;
-        }
-        int oldValue = heapArray[index].getValue(); // сохраняем старое значение
-        heapArray[index].setValue(newValue); // присваиваем новое
-
-        if (oldValue < newValue) {// если узел повышается
-            displaceUp(index);     // выполняется смещение вверх
-        }
-        else {                  // если понижается
-            displaceDown(index);   // смещение вниз
-        }
-        return true;
-    }*/
