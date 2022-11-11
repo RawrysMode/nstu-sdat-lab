@@ -27,3 +27,4 @@ src/HeapManagerGUI.form
 
 out/
 *.txt
+.idea/discord.xml
