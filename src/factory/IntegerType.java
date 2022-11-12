@@ -4,15 +4,13 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 public class IntegerType implements UserType, Serializable {
-
     private int value;
-    public IntegerType(int value) {
-        this.value = value;
+    public IntegerType() {
     }
 
     @Override
     public String typeName() {
-        return "factory.IntegerType";
+        return "integer";
     }
 
     @Override
@@ -27,13 +25,18 @@ public class IntegerType implements UserType, Serializable {
     }
 
     @Override
+    public Object create() {
+        return new IntegerType();
+    }
+
+    @Override
     public Object readValue() {
         return this.value;
     }
 
     @Override
     public Object parseValue(String ss) {
-        return value = Integer.parseInt(ss);
+        return this.value = Integer.parseInt(ss);
     }
 
     @Override
