@@ -1,21 +1,31 @@
 import factory.UserFactory;
 import factory.UserType;
-import factory.UserTypeFactory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Heap implements Serializable {
+public class Heap {
     private int currentSize;
-    private final UserTypeFactory userTypeFactory;
-    private UserType object;
-
+    private static UserType object;
     private final ArrayList<UserType> heapArray;
+
+    public static UserType getObject() {
+        return object;
+    }
+
+    public ArrayList<UserType> getHeapArray() {
+        return heapArray;
+    }
 
     public Heap(String userType) {
         this.currentSize = 0;
         this.heapArray = new ArrayList<>();
-        userTypeFactory = UserFactory.getBuilderByName(userType);
+        object = UserFactory.getBuilderByName(userType);
+    }
+
+    public Heap(String userType, ArrayList<UserType> arrayList){
+        this.currentSize = arrayList.size();
+        this.heapArray = new ArrayList<>(arrayList);
+        object = UserFactory.getBuilderByName(userType);
     }
 
     public StringBuilder printHeap() {
@@ -25,10 +35,9 @@ public class Heap implements Serializable {
         }
 
         stringBuilder.append("\nArray: [");
-        heapArray.forEach(heapArray -> stringBuilder.append(" ").append(heapArray));
-        stringBuilder.append(" ]");
+        heapArray.forEach(e -> stringBuilder.append(" ").append(e));
+        stringBuilder.append(" ] | heap size: ").append(heapArray.size()).append("\n");
 
-        int countOfGaps = 32;
         int itemsPerRow = 1;
         int columnNumber = 0;
 
@@ -37,28 +46,21 @@ public class Heap implements Serializable {
                 HEAP:\s
                 """);
         for (int i = 0; i < currentSize; i++) {
-            if (columnNumber == 0) {
-                stringBuilder.append(" ".repeat(countOfGaps));
-            }
-            stringBuilder.append(heapArray.get(i).readValue());
+            stringBuilder.append(heapArray.get(i).readValue()).append("  ");
 
             if (++columnNumber == itemsPerRow) {
-                countOfGaps /= 2;
                 itemsPerRow *= 2;
                 columnNumber = 0;
                 stringBuilder.append("\n");
-            } else {
-                stringBuilder.append(" ".repeat(Math.max(0, countOfGaps * 2 - 2)));
             }
         }
         stringBuilder.append("\n\n");
         System.out.println(stringBuilder);
-        System.out.println("\nSIZE: " + heapArray.size());
         return stringBuilder;
     }
 
     public StringBuilder insertNode(String string) {
-        object = userTypeFactory.create();
+        object = UserFactory.getBuilderByName(object.typeName());
         object.parseValue(string);
         heapArray.add(object);
         displaceUp(currentSize++);
@@ -70,7 +72,7 @@ public class Heap implements Serializable {
             return this.insertNode(value);
         }
 
-        object = userTypeFactory.create();
+        object = UserFactory.getBuilderByName(object.typeName());
         object.parseValue(value);
         heapArray.add(index, object);
         currentSize++;
@@ -79,7 +81,6 @@ public class Heap implements Serializable {
         } else {
             displaceUp(index);
         }
-
         return new StringBuilder(" > value ").append(value).append(" inserted at index [").append(index).append("] \n");
     }
 
@@ -129,7 +130,7 @@ public class Heap implements Serializable {
                 break;
             }
 
-            heapArray.set(index, heapArray.get(leftChild));
+            heapArray.set(index, heapArray.get(largerChild));
             index = largerChild;
         }
         heapArray.set(index, top);
@@ -137,10 +138,6 @@ public class Heap implements Serializable {
 
     public StringBuilder getElementByIndex(int index){
         if(heapArray.isEmpty()) return new StringBuilder(" > heap is empty \n");
-
         return new StringBuilder(" > returned node with index [").append(index).append("]: ").append(heapArray.get(index)).append("\n");
     }
 }
-
-
-
