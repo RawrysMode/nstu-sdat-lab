@@ -51,7 +51,6 @@ public class HeapManagerGUI extends JFrame {
             heapOutputArea.append(" > now selected " + userType.getSelectedItem() + " type" + "\n");
         });
 
-
         /* Insertion panel
          * */
         JTextField nodeInsertionTextField = new JTextField("enter data here", 18);
@@ -84,15 +83,18 @@ public class HeapManagerGUI extends JFrame {
         createJPanel("Getter & remover", 90, jButtonsContainer, jTextFieldsContainer, toolsMenuPanel);
 
         /* Additional options panel
-         * TODO: export, import, heapOutputFieldCleaner
          * */
         JButton exportButton = new JButton("export");
-        exportButton.addActionListener(e -> {
-            // TODO: export
-        });
+        exportButton.addActionListener(e -> heapOutputArea.append(Serialization.loadToFile(heap)));
         JButton importButton = new JButton("import");
         importButton.addActionListener(e -> {
-            // TODO: import
+            if (userType.getSelectedItem() == "integer"){
+                heap = Serialization.readFromFile("saved_integer.txt");
+                heapOutputArea.append(Serialization.returnedValue);
+            } else {
+                heap = Serialization.readFromFile("saved_datetime.txt");
+                heapOutputArea.append(Serialization.returnedValue);
+            }
         });
         JButton printHeap = new JButton("print");
         printHeap.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.printHeap())));
@@ -113,7 +115,7 @@ public class HeapManagerGUI extends JFrame {
         this.setVisible(true);
     }
 
-    protected void changeFont(Component component, Font font) {
+    private void changeFont(Component component, Font font) {
         component.setFont(font);
         if (component instanceof Container) {
             for (Component child : ((Container) component).getComponents()) {
@@ -122,7 +124,7 @@ public class HeapManagerGUI extends JFrame {
         }
     }
 
-    protected void createJPanel(String title, int height, ArrayList<JButton> targetButton, ArrayList<JTextField> targetTextField, JPanel targetBox) {
+    private void createJPanel(String title, int height, ArrayList<JButton> targetButton, ArrayList<JTextField> targetTextField, JPanel targetBox) {
         JPanel jPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
         jPanel.setPreferredSize(new Dimension(180, height));
         jPanel.setBorder(BorderFactory.createTitledBorder(
