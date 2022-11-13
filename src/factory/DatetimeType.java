@@ -1,11 +1,10 @@
 package factory;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
-public class DatetimeType implements UserType, Serializable {
+public class DatetimeType implements UserType {
     private int year, month, day, hour, minute, second;
     public DatetimeType() {
     }

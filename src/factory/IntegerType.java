@@ -1,9 +1,8 @@
 package factory;
 
-import java.io.Serializable;
 import java.util.Comparator;
 
-public class IntegerType implements UserType, Serializable {
+public class IntegerType implements UserType {
     private int value;
     public IntegerType() {
     }
