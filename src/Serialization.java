@@ -8,7 +8,13 @@ public class Serialization {
     static String returnedValue;
 
     public static String loadToFile(Heap heap){
-        String type = Heap.getObject().typeName();
+        String type;
+        if (!heap.getHeapArray().isEmpty()){
+            type = heap.getHeapArray().get(0).typeName();
+        } else {
+            return " > there is nothing to serialize :(\n";
+        }
+
         try (PrintWriter writer = new PrintWriter("saved_" + type + ".txt")){
             writer.print(type + "\n");
             heap.getHeapArray().forEach(e -> writer.print(e + ","));
@@ -31,7 +37,7 @@ public class Serialization {
                 arrayList.add(object);
             }
             returnedValue = " > data uploaded successfully\n";
-            return new Heap(typeName, arrayList);
+            return new Heap(arrayList);
         } catch (Exception e) {
             returnedValue = " > failed to load data from file file\n" + e;
             throw new RuntimeException(e);
