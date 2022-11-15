@@ -4,26 +4,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
-public class DatetimeType implements UserType {
-    private int year, month, day, hour, minute, second;
-    public DatetimeType() {
+public class DateType implements UserType {
+    private int year, month, day;
+    public DateType() {
     }
 
     @Override
     public String typeName() {
-        return "datetime";
+        return "date";
     }
 
     @Override
     public Object clone() {
         try {
-            DatetimeType clone = (DatetimeType) super.clone();
+            DateType clone = (DateType) super.clone();
             clone.year = this.year;
             clone.month = this.year;
             clone.day = this.year;
-            clone.hour = this.year;
-            clone.minute = this.year;
-
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
@@ -32,7 +29,7 @@ public class DatetimeType implements UserType {
 
     @Override
     public Object create() {
-        return new DatetimeType();
+        return new DateType();
     }
 
     @Override
@@ -43,20 +40,17 @@ public class DatetimeType implements UserType {
     @Override
     public Object parseValue(String ss) {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             format.setLenient(false);
             format.parse(ss);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 
-        String[] string = ss.split("[\\s-:]+");
+        String[] string = ss.split("-");
         this.year = Integer.parseInt(string[0]);
         this.month = Integer.parseInt(string[1]);
         this.day = Integer.parseInt(string[2]);
-        this.hour = Integer.parseInt(string[3]);
-        this.minute = Integer.parseInt(string[4]);
-        this.second = Integer.parseInt(string[5]);
         return this;
     }
 
@@ -67,9 +61,10 @@ public class DatetimeType implements UserType {
 
     @Override
     public int compare(Object o1, Object o2) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             if (sdf.parse(o1.toString()).before(sdf.parse(o2.toString()))) return -1; //o1 > o2 : 1
+            if (sdf.parse(o2.toString()).before(sdf.parse(o1.toString()))) return 1; //o1 > o2 : 1
             else return 0;
         } catch (ParseException e) {
             throw new RuntimeException(e);
@@ -78,6 +73,6 @@ public class DatetimeType implements UserType {
 
     @Override
     public String toString() {
-        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        return year + "-" + month + "-" + day;
     }
 }
