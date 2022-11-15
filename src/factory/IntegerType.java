@@ -35,7 +35,7 @@ public class IntegerType implements UserType {
 
     @Override
     public Object parseValue(String ss) {
-        return this.value = Integer.parseInt(ss);
+        return value = Integer.parseInt(ss);
     }
 
     @Override

@@ -12,7 +12,7 @@ public class UserFactory {
 
     private static final Map<String, Supplier<UserType>> factoryMap = Map.of(
             "integer", IntegerType::new,
-            "datetime", DatetimeType::new
+            "datetime", DateType::new
     );
 
     public static UserType getBuilderByName(String name) {
