@@ -1,42 +1,30 @@
-import factory.UserFactory;
 import factory.UserType;
 
 import java.util.ArrayList;
 
 public class Heap {
     private int currentSize;
-    private static UserType object;
     private final ArrayList<UserType> heapArray;
-
-    public static UserType getObject() {
-        return object;
-    }
 
     public ArrayList<UserType> getHeapArray() {
         return heapArray;
     }
 
-    public Heap(String userType) {
-        this.currentSize = 0;
+    public Heap() {
         this.heapArray = new ArrayList<>();
-        object = UserFactory.getBuilderByName(userType);
+        this.currentSize = 0;
     }
 
-    public Heap(String userType, ArrayList<UserType> arrayList){
-        this.currentSize = arrayList.size();
+    public Heap(ArrayList<UserType> arrayList) {
         this.heapArray = new ArrayList<>(arrayList);
-        object = UserFactory.getBuilderByName(userType);
+        this.currentSize = arrayList.size();
     }
 
     public StringBuilder printHeap() {
         StringBuilder stringBuilder = new StringBuilder();
-        if (heapArray.size() == 0){
+        if (heapArray.size() == 0) {
             return stringBuilder.append(" > heap is empty :( \n");
         }
-
-        stringBuilder.append("\nArray: [");
-        heapArray.forEach(e -> stringBuilder.append(" ").append(e));
-        stringBuilder.append(" ] | heap size: ").append(heapArray.size()).append("\n");
 
         int itemsPerRow = 1;
         int columnNumber = 0;
@@ -59,33 +47,28 @@ public class Heap {
         return stringBuilder;
     }
 
-    public StringBuilder insertNode(String string) {
-        object = UserFactory.getBuilderByName(object.typeName());
-        object.parseValue(string);
-        heapArray.add(object);
+    public StringBuilder insertNode(UserType userType) {
+        heapArray.add(userType);
         displaceUp(currentSize++);
-        return new StringBuilder(" > inserted value: ").append(string).append("\n");
+        return new StringBuilder(" > inserted value: ").append(userType).append("\n");
     }
 
-    public StringBuilder insertNode(int index, String value){
-        if (heapArray.isEmpty()){
-            return this.insertNode(value);
+    public StringBuilder insertNode(int index, UserType userType) {
+        if (heapArray.isEmpty()) {
+            return this.insertNode(userType);
         }
-
-        object = UserFactory.getBuilderByName(object.typeName());
-        object.parseValue(value);
-        heapArray.add(index, object);
+        heapArray.add(index, userType);
         currentSize++;
-        if(object.getTypeComparator().compare(object, heapArray.get(index + 1)) < 0){
-            displaceDown(index);
+        if (userType.getTypeComparator().compare(userType, heapArray.get(index + 1)) < 0) {
+            displaceDown(currentSize, index);
         } else {
             displaceUp(index);
         }
-        return new StringBuilder(" > value ").append(value).append(" inserted at index [").append(index).append("] \n");
+        return new StringBuilder(" > value ").append(userType).append(" inserted at index [").append(index).append("] \n");
     }
 
     public StringBuilder removeNode(int index) {
-        if (currentSize == 1 && index == 0){
+        if (currentSize == 1 && index == 0) {
             heapArray.clear();
             --currentSize;
             return new StringBuilder(" > now heap is empty :( \n");
@@ -95,10 +78,10 @@ public class Heap {
             String s = String.valueOf(heapArray.get(index));
             heapArray.set(index, heapArray.get(--currentSize));
             heapArray.remove(currentSize);
-            displaceDown(index);
+            displaceDown(currentSize, index);
             return new StringBuilder(" > node with index [").append(index).append("] ").append(s).append(" has been removed \n");
         }
-        return new StringBuilder(" > heap is already empty \n");
+        return new StringBuilder(" > something went wrong  \n");
     }
 
     private void displaceUp(int index) {
@@ -112,32 +95,57 @@ public class Heap {
         heapArray.set(index, bottom);
     }
 
-    private void displaceDown(int index) {
-        int largerChild;
-        UserType top = heapArray.get(index);
-        while (index < currentSize / 2) {
-            int leftChild = 2 * index + 1;
-            int rightChild = leftChild + 1;
+    void displaceDown(int n, int index) {
+        int largerChild = index;
+        int leftChild = 2 * index + 1;
+        int rightChild = leftChild + 1;
 
-            if (rightChild < currentSize && top.getTypeComparator().compare(heapArray.get(leftChild), heapArray.get(rightChild)) < 0) {
-                largerChild = rightChild;
-            }
-            else {
-                largerChild = leftChild;
-            }
+        UserType object = heapArray.get(index);
+        if (leftChild < n && object.getTypeComparator().compare(heapArray.get(leftChild), heapArray.get(largerChild)) > 0)
+            largerChild = leftChild;
+        if (rightChild < n && object.getTypeComparator().compare(heapArray.get(rightChild), heapArray.get(largerChild)) > 0)
+            largerChild = rightChild;
 
-            if (top.getTypeComparator().compare(top, heapArray.get(largerChild)) >= 0) {
-                break;
-            }
-
+        if (largerChild != index) {
             heapArray.set(index, heapArray.get(largerChild));
-            index = largerChild;
+            heapArray.set(largerChild, object);
+            displaceDown(n, largerChild);
         }
-        heapArray.set(index, top);
     }
 
-    public StringBuilder getElementByIndex(int index){
-        if(heapArray.isEmpty()) return new StringBuilder(" > heap is empty \n");
+    public StringBuilder sort() {
+        long startTime = System.nanoTime();
+        sortToMaxHeap();
+        for (int i = currentSize - 1; i >= 0; i--) {
+            UserType object = heapArray.get(0);
+            heapArray.set(0, heapArray.get(i));
+            heapArray.set(i, object);
+            displaceDown(i, 0);
+        }
+        long elapsedTime = System.nanoTime() - startTime;
+        return new StringBuilder(" > elements sorted: ")
+                .append(currentSize).append(" | ")
+                .append(elapsedTime / 1000000)
+                .append(" milliseconds. \n");
+    }
+
+    public StringBuilder sortToMaxHeap(){
+        for (int i = currentSize / 2 - 1; i >= 0; i--) {
+            displaceDown(currentSize, i);
+        }
+        return new StringBuilder(" > the heap has been sorted to max-heap\n");
+    }
+
+    public StringBuilder getElementByIndex(int index) {
+        if (heapArray.isEmpty()) return new StringBuilder(" > heap is empty \n");
         return new StringBuilder(" > returned node with index [").append(index).append("]: ").append(heapArray.get(index)).append("\n");
+    }
+
+    public StringBuilder printArray() {
+        StringBuilder stringBuilder = new StringBuilder("");
+        stringBuilder.append("\nArray: [");
+        heapArray.forEach(e -> stringBuilder.append(" ").append(e));
+        stringBuilder.append(" ] | heap size: ").append(heapArray.size()).append("\n");
+        return stringBuilder;
     }
 }
