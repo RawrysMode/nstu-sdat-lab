@@ -1,4 +1,5 @@
 import factory.UserFactory;
+import factory.UserType;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -16,7 +17,7 @@ public class HeapManagerGUI extends JFrame {
 
     HeapManagerGUI() {
         this.setTitle("Heap Manager");
-        heap = new Heap("integer");
+        heap = new Heap();
 
         /* Main frame panel
          * */
@@ -46,7 +47,7 @@ public class HeapManagerGUI extends JFrame {
         userType.setPreferredSize(new Dimension(170, 20));
         toolsMenuPanel.add(userType);
         userType.addActionListener(e -> {
-            heap = new Heap((String) userType.getSelectedItem());
+            heap = new Heap();
             heapOutputArea.setText("");
             heapOutputArea.append(" > now selected " + userType.getSelectedItem() + " type" + "\n");
         });
@@ -55,7 +56,11 @@ public class HeapManagerGUI extends JFrame {
          * */
         JTextField nodeInsertionTextField = new JTextField("enter data here", 18);
         JButton nodeInsertionButton = new JButton("insert");
-        nodeInsertionButton.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.insertNode(nodeInsertionTextField.getText()))));
+        nodeInsertionButton.addActionListener(e -> {
+            UserType object = UserFactory.getBuilderByName((String) userType.getSelectedItem());
+            object.parseValue(nodeInsertionTextField.getText());
+            heapOutputArea.append(String.valueOf(heap.insertNode(object)));
+        });
         jButtonsContainer.add(nodeInsertionButton);
         jTextFieldsContainer.add(nodeInsertionTextField);
         createJPanel("Insert", 90, jButtonsContainer, jTextFieldsContainer, toolsMenuPanel);
@@ -65,7 +70,14 @@ public class HeapManagerGUI extends JFrame {
         JTextField indexTextField = new JTextField("enter data here", 18);
         JTextField dataTextField = new JTextField("enter index here", 18);
         JButton nodeByIndexInsertionButton = new JButton("insert");
-        nodeByIndexInsertionButton.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.insertNode(Integer.parseInt(indexTextField.getText()), dataTextField.getText()))));
+        nodeByIndexInsertionButton.addActionListener(e -> {
+            UserType object = UserFactory.getBuilderByName((String) userType.getSelectedItem());
+            object.parseValue(dataTextField.getText());
+            heapOutputArea.
+                    append(String.valueOf(
+                            heap.insertNode(Integer.parseInt(indexTextField.getText()), object))
+                    );
+        });
         jButtonsContainer.add(nodeByIndexInsertionButton);
         Collections.addAll(jTextFieldsContainer, indexTextField, dataTextField);
         createJPanel("Insert by index", 115, jButtonsContainer, jTextFieldsContainer, toolsMenuPanel);
@@ -74,10 +86,12 @@ public class HeapManagerGUI extends JFrame {
          * */
         JTextField nodeGetterTextField = new JTextField("enter index here", 18);
         JButton nodeGetterButton = new JButton("get");
-        nodeGetterButton.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.getElementByIndex(Integer.parseInt(nodeGetterTextField.getText())))));
+        nodeGetterButton.addActionListener(e -> heapOutputArea.append(String.valueOf(
+                heap.getElementByIndex(Integer.parseInt(nodeGetterTextField.getText())))));
 
         JButton nodeRemoverButton = new JButton("remove");
-        nodeRemoverButton.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.removeNode(Integer.parseInt(nodeGetterTextField.getText())))));
+        nodeRemoverButton.addActionListener(e -> heapOutputArea.
+                append(String.valueOf(heap.removeNode(Integer.parseInt(nodeGetterTextField.getText())))));
         Collections.addAll(jButtonsContainer, nodeGetterButton, nodeRemoverButton);
         jTextFieldsContainer.add(nodeGetterTextField);
         createJPanel("Getter & remover", 90, jButtonsContainer, jTextFieldsContainer, toolsMenuPanel);
@@ -98,18 +112,30 @@ public class HeapManagerGUI extends JFrame {
         });
         JButton printHeap = new JButton("print");
         printHeap.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.printHeap())));
-        JButton clearButton = new JButton("clear");
+        JButton clearButton = new JButton("clear log");
         clearButton.addActionListener(e -> heapOutputArea.setText(""));
-        Collections.addAll(jButtonsContainer, exportButton, importButton, clearButton, printHeap);
+        JButton defaultSortButton = new JButton("default sort");
+        defaultSortButton.addActionListener(e -> {
+            heapOutputArea.append(String.valueOf(heap.sort()));
+            heapOutputArea.append(String.valueOf(heap.printArray()));
+        });
+        JButton maxHeapSortButton = new JButton("max-heap sort");
+        maxHeapSortButton.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.sortToMaxHeap())));
+        JButton clearHeapButton = new JButton("clear heap");
+        clearHeapButton.addActionListener(e -> {
+            heap.getHeapArray().clear();
+            heapOutputArea.append(" > heap empty now\n");
+        });
+        Collections.addAll(jButtonsContainer, exportButton, importButton, clearButton, printHeap, defaultSortButton, maxHeapSortButton, clearHeapButton);
         ArrayList<JTextField> nullJFiller = new ArrayList<>();
-        createJPanel("Additional options", 95, jButtonsContainer, nullJFiller, toolsMenuPanel);
+        createJPanel("Additional options", 225, jButtonsContainer, nullJFiller, toolsMenuPanel);
 
         /* JFrame settings
          * */
         changeFont(mainFrame, heapOutputFont);
         changeFont(this, heapOutputFont);
 
-        this.setSize(800, 500);
+        this.setSize(800, 650);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(mainFrame);
         this.setVisible(true);

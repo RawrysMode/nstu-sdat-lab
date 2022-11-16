@@ -1,78 +1,42 @@
-import java.sql.Timestamp;
+import factory.UserFactory;
+import factory.UserType;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
         new HeapManagerGUI();
-        //testDatetimeType();
-        //testIntegerType();
+
+        /* testing on an increasing number of elements
+        * */
+        testIntegerType(1000000);
+        testIntegerType(1200000);
+        testIntegerType(1400000);
+        testIntegerType(1600000);
+        testIntegerType(1800000);
+        testIntegerType(2000000);
+        testIntegerType(2200000);
+        testIntegerType(2400000);
+        testIntegerType(2600000);
+        testIntegerType(2800000);
+        testIntegerType(3000000);
     }
-
-    static void testDatetimeType() {
-        int numberOfRequiredNodes = 20;
-        long rangeBegin = Timestamp.valueOf("1980-01-01 00:00:00").getTime();
-        long rangeEnd = Timestamp.valueOf("2050-12-28 23:59:00").getTime();
-        long difference = rangeEnd - rangeBegin + 1;
-        Heap heap = new Heap("datetime");
-        for (int i = 0; i < numberOfRequiredNodes; i++){
-            Timestamp rand = new Timestamp(rangeBegin + (long)(Math.random() * difference));
-            String s = rand.toString().split("\\.")[0];
-            heap.insertNode(s);
-        }
-        heap.printHeap();
-
-        System.out.println(heap.removeNode(0));
-        heap.printHeap();
-        System.out.println(heap.removeNode(2));
-        heap.printHeap();
-
-        System.out.println(heap.insertNode(15,"2050-12-28 23:59:00"));
-        heap.printHeap();
-        System.out.println(heap.insertNode(8,"1970-06-11 15:01:01"));
-        heap.printHeap();
-
-        System.out.println(heap.getElementByIndex(0));
-        System.out.println(heap.getElementByIndex(16));
-        heap.printHeap();
-
-        System.out.println(Serialization.loadToFile(heap));
-
-        heap = Serialization.readFromFile("saved_datetime.txt");
-        System.out.println(Serialization.returnedValue);
-        heap.printHeap();
-    }
-
-    static void testIntegerType() {
-        int numberOfRequiredNodes = 20;
-        int rangeBegin = -500;
-        int rangeEnd = 500;
+    
+    static void testIntegerType(int numberOfRequiredNodes) {
+        int rangeBegin = -99999;
+        int rangeEnd = 99999;
         int difference = rangeEnd - rangeBegin;
-        Heap heap = new Heap("integer");
+        ArrayList<UserType> arrayList = new ArrayList<>();
+
         for (int i = 0; i < numberOfRequiredNodes; i++){
             Random random = new Random();
-            int result = random.nextInt(difference) + rangeBegin;
-            heap.insertNode(String.valueOf(result));
+            UserType object = UserFactory.getBuilderByName("integer");
+            object.parseValue(String.valueOf(random.nextInt(difference) + rangeBegin));
+            arrayList.add(object);
         }
-        heap.printHeap();
 
-        System.out.println(heap.removeNode(0));
-        heap.printHeap();
-        System.out.println(heap.removeNode(2));
-        heap.printHeap();
-
-        System.out.println(heap.insertNode(15,"90"));
-        heap.printHeap();
-        System.out.println(heap.insertNode(8,"-25"));
-        heap.printHeap();
-
-        System.out.println(heap.getElementByIndex(0));
-        System.out.println(heap.getElementByIndex(16));
-        heap.printHeap();
-
-        System.out.println(Serialization.loadToFile(heap));
-
-        heap = Serialization.readFromFile("saved_integer.txt");
-        System.out.println(Serialization.returnedValue);
-        heap.printHeap();
+        Heap heap = new Heap(arrayList);
+        System.out.println(heap.sort());
     }
 }
