@@ -39,34 +39,4 @@ public class Main {
         Heap heap = new Heap(arrayList);
         System.out.println(heap.sort());
     }
-
-//    static void testIntegerType() {
-//        int numberOfRequiredNodes = 10;
-//        int rangeBegin = -99999;
-//        int rangeEnd = 99999;
-//        int difference = rangeEnd - rangeBegin;
-//        Heap heap = new Heap();
-//        for (int i = 0; i < numberOfRequiredNodes; i++){
-//            Random random = new Random();
-//            UserType object = UserFactory.getBuilderByName("integer");
-//            object.parseValue(String.valueOf(random.nextInt(difference) + rangeBegin));
-//            heap.insertNode(object);
-//        }
-//        heap.printHeap();
-//
-//        System.out.println(heap.removeNode(0));
-//        heap.printHeap();
-//        System.out.println(heap.removeNode(2));
-//        heap.printHeap();
-//
-//        System.out.println(heap.getElementByIndex(0));
-//        System.out.println(heap.getElementByIndex(2));
-//        heap.printHeap();
-//
-//        System.out.println(Serialization.loadToFile(heap));
-//
-//        heap = Serialization.readFromFile("saved_integer.txt");
-//        System.out.println(Serialization.returnedValue);
-//        heap.printHeap();
-//    }
 }
