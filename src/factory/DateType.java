@@ -55,12 +55,12 @@ public class DateType implements UserType {
     }
 
     @Override
-    public Comparator getTypeComparator() {
+    public Comparator<UserType> getTypeComparator() {
         return this;
     }
 
     @Override
-    public int compare(Object o1, Object o2) {
+    public int compare(UserType o1, UserType o2) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             if (sdf.parse(o1.toString()).before(sdf.parse(o2.toString()))) return -1; //o1 > o2 : 1

@@ -39,12 +39,12 @@ public class IntegerType implements UserType {
     }
 
     @Override
-    public Comparator getTypeComparator() {
+    public Comparator<UserType> getTypeComparator() {
         return this;
     }
 
     @Override
-    public int compare(Object o1, Object o2) {
+    public int compare(UserType o1, UserType o2) {
         return Integer.compare(((IntegerType) o1).value, ((IntegerType) o2).value); //o1 > o2 : 1
     }
 
