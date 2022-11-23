@@ -1,5 +1,9 @@
+package modules.java_module;
+
 import factory.UserFactory;
 import factory.UserType;
+import modules.IHeap;
+import utils.Serialization;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -13,11 +17,10 @@ public class HeapManagerGUI extends JFrame {
     private final ArrayList<JButton> jButtonsContainer = new ArrayList<>();
     private final ArrayList<JTextField> jTextFieldsContainer = new ArrayList<>();
     private final JTextArea heapOutputArea;
-    private Heap heap;
+    private final IHeap heap = new Heap();
 
     HeapManagerGUI() {
-        this.setTitle("Heap Manager");
-        heap = new Heap();
+        this.setTitle("Java Heap Manager");
 
         /* Main frame panel
          * */
@@ -47,7 +50,7 @@ public class HeapManagerGUI extends JFrame {
         userType.setPreferredSize(new Dimension(170, 20));
         toolsMenuPanel.add(userType);
         userType.addActionListener(e -> {
-            heap = new Heap();
+            heap.setCurrentSizeToZero();
             heapOutputArea.setText("");
             heapOutputArea.append(" > now selected " + userType.getSelectedItem() + " type" + "\n");
         });
@@ -67,8 +70,8 @@ public class HeapManagerGUI extends JFrame {
 
         /* Insertion at index panel
          * */
-        JTextField indexTextField = new JTextField("enter data here", 18);
-        JTextField dataTextField = new JTextField("enter index here", 18);
+        JTextField indexTextField = new JTextField("enter index here", 18);
+        JTextField dataTextField = new JTextField("enter data here", 18);
         JButton nodeByIndexInsertionButton = new JButton("insert");
         nodeByIndexInsertionButton.addActionListener(e -> {
             UserType object = UserFactory.getBuilderByName((String) userType.getSelectedItem());
@@ -103,10 +106,10 @@ public class HeapManagerGUI extends JFrame {
         JButton importButton = new JButton("import");
         importButton.addActionListener(e -> {
             if (userType.getSelectedItem() == "integer"){
-                heap = Serialization.readFromFile("saved_integer.txt");
+                Serialization.readFromFile("saved_integer.txt", heap);
                 heapOutputArea.append(Serialization.returnedValue);
             } else {
-                heap = Serialization.readFromFile("saved_datetime.txt");
+                Serialization.readFromFile("saved_date.txt", heap);
                 heapOutputArea.append(Serialization.returnedValue);
             }
         });
@@ -123,10 +126,10 @@ public class HeapManagerGUI extends JFrame {
         maxHeapSortButton.addActionListener(e -> heapOutputArea.append(String.valueOf(heap.sortToMaxHeap())));
         JButton clearHeapButton = new JButton("clear heap");
         clearHeapButton.addActionListener(e -> {
-            heap.getHeapArray().clear();
+            heap.setCurrentSizeToZero();
             heapOutputArea.append(" > heap empty now\n");
         });
-        Collections.addAll(jButtonsContainer, exportButton, importButton, clearButton, printHeap, defaultSortButton, maxHeapSortButton, clearHeapButton);
+        Collections.addAll(jButtonsContainer, exportButton, importButton, printHeap, clearButton, defaultSortButton, maxHeapSortButton, clearHeapButton);
         ArrayList<JTextField> nullJFiller = new ArrayList<>();
         createJPanel("Additional options", 225, jButtonsContainer, nullJFiller, toolsMenuPanel);
 
