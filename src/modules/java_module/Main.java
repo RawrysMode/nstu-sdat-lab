@@ -1,12 +1,15 @@
+package modules.java_module;
+
 import factory.UserFactory;
 import factory.UserType;
+import modules.IHeap;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        new HeapManagerGUI();
+        //new HeapManagerGUI();
 
         /* testing on an increasing number of elements
         * */
@@ -36,7 +39,7 @@ public class Main {
             arrayList.add(object);
         }
 
-        Heap heap = new Heap(arrayList);
-        System.out.println(heap.sort());
+        IHeap heap = new Heap(arrayList);
+        System.out.print(heap.sort());
     }
 }
