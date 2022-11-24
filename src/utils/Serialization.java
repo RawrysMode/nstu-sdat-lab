@@ -26,7 +26,7 @@ public class Serialization {
         }
     }
 
-    public static IHeap readFromFile(String filename, IHeap heap) {
+    public static void readFromFile(String filename, IHeap heap) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String typeName = br.readLine();
             String lineOfItems = br.readLine();
@@ -39,7 +39,6 @@ public class Serialization {
                 heap.insertNode(object);
             }
             returnedValue = " > data uploaded successfully\n";
-            return heap;
         } catch (Exception e) {
             returnedValue = " > failed to load data from file file\n" + e;
             throw new RuntimeException(e);
