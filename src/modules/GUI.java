@@ -1,8 +1,8 @@
-package modules.java_module;
+package modules;
 
 import factory.UserFactory;
 import factory.UserType;
-import modules.IHeap;
+import modules.java_module.Heap;
 import utils.Serialization;
 
 import javax.swing.*;
@@ -11,16 +11,16 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HeapManagerGUI extends JFrame {
+public class GUI extends JFrame {
     private final Font heapOutputFont = new Font("Consolas", Font.PLAIN, 14);
-    private final JComboBox<Object> userType;
+    private final JComboBox<Object> userTypeComboBox;
     private final ArrayList<JButton> jButtonsContainer = new ArrayList<>();
     private final ArrayList<JTextField> jTextFieldsContainer = new ArrayList<>();
     private final JTextArea heapOutputArea;
-    private final IHeap heap = new Heap();
 
-    HeapManagerGUI() {
-        this.setTitle("Java Heap Manager");
+
+    public GUI(IHeap heap) {
+        this.setTitle(heap.getLanguageType() + " Heap Manager");
 
         /* Main frame panel
          * */
@@ -46,13 +46,13 @@ public class HeapManagerGUI extends JFrame {
 
         /* Combo box
          * */
-        userType = new JComboBox<>(UserFactory.getTypeNameList().toArray());
-        userType.setPreferredSize(new Dimension(170, 20));
-        toolsMenuPanel.add(userType);
-        userType.addActionListener(e -> {
+        userTypeComboBox = new JComboBox<>(UserFactory.getTypeNameList().toArray());
+        userTypeComboBox.setPreferredSize(new Dimension(170, 20));
+        toolsMenuPanel.add(userTypeComboBox);
+        userTypeComboBox.addActionListener(e -> {
             heap.setCurrentSizeToZero();
             heapOutputArea.setText("");
-            heapOutputArea.append(" > now selected " + userType.getSelectedItem() + " type" + "\n");
+            heapOutputArea.append(" > now selected " + userTypeComboBox.getSelectedItem() + " type" + "\n");
         });
 
         /* Insertion panel
@@ -60,7 +60,7 @@ public class HeapManagerGUI extends JFrame {
         JTextField nodeInsertionTextField = new JTextField("enter data here", 18);
         JButton nodeInsertionButton = new JButton("insert");
         nodeInsertionButton.addActionListener(e -> {
-            UserType object = UserFactory.getBuilderByName((String) userType.getSelectedItem());
+            UserType object = UserFactory.getBuilderByName((String) userTypeComboBox.getSelectedItem());
             object.parseValue(nodeInsertionTextField.getText());
             heapOutputArea.append(String.valueOf(heap.insertNode(object)));
         });
@@ -74,7 +74,7 @@ public class HeapManagerGUI extends JFrame {
         JTextField dataTextField = new JTextField("enter data here", 18);
         JButton nodeByIndexInsertionButton = new JButton("insert");
         nodeByIndexInsertionButton.addActionListener(e -> {
-            UserType object = UserFactory.getBuilderByName((String) userType.getSelectedItem());
+            UserType object = UserFactory.getBuilderByName((String) userTypeComboBox.getSelectedItem());
             object.parseValue(dataTextField.getText());
             heapOutputArea.
                     append(String.valueOf(
@@ -105,7 +105,7 @@ public class HeapManagerGUI extends JFrame {
         exportButton.addActionListener(e -> heapOutputArea.append(Serialization.loadToFile(heap)));
         JButton importButton = new JButton("import");
         importButton.addActionListener(e -> {
-            if (userType.getSelectedItem() == "integer"){
+            if (userTypeComboBox.getSelectedItem() == "integer"){
                 Serialization.readFromFile("saved_integer.txt", heap);
                 heapOutputArea.append(Serialization.returnedValue);
             } else {

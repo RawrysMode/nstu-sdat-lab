@@ -11,6 +11,9 @@ import scala.jdk.CollectionConverters.BufferHasAsJava
 class Heap extends IHeap{
   private var heapArray: ArrayBuffer[UserType] = new ArrayBuffer[UserType]()
   private var currentSize: Int = 0
+  private val languageType = "Scala"
+
+  override def getLanguageType: String = "Scala";
 
   def this(arrayList: Array[UserType]) {
     this()

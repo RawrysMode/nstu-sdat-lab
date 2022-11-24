@@ -10,6 +10,10 @@ public class Heap implements IHeap {
     private int currentSize;
     private final ArrayList<UserType> heapArray;
 
+    public String getLanguageType() {
+        return "Java";
+    }
+
     public List<UserType> getHeapArray() {
         return heapArray;
     }

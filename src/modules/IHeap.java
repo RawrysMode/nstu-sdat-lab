@@ -5,6 +5,7 @@ import factory.UserType;
 import java.util.List;
 
 public interface IHeap {
+    String getLanguageType();
     StringBuilder printHeap();
     StringBuilder insertNode(UserType userType);
     StringBuilder insertNode(int index, UserType userType);

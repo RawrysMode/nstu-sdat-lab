@@ -2,6 +2,7 @@ package modules.java_module;
 
 import factory.UserFactory;
 import factory.UserType;
+import modules.GUI;
 import modules.IHeap;
 
 import java.util.ArrayList;
@@ -9,21 +10,22 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        //new HeapManagerGUI();
+        IHeap iHeap = new Heap();
+        new GUI(iHeap);
 
         /* testing on an increasing number of elements
         * */
-        testIntegerType(1000000);
-        testIntegerType(1200000);
-        testIntegerType(1400000);
-        testIntegerType(1600000);
-        testIntegerType(1800000);
-        testIntegerType(2000000);
-        testIntegerType(2200000);
-        testIntegerType(2400000);
-        testIntegerType(2600000);
-        testIntegerType(2800000);
-        testIntegerType(3000000);
+//        testIntegerType(1000000);
+//        testIntegerType(1200000);
+//        testIntegerType(1400000);
+//        testIntegerType(1600000);
+//        testIntegerType(1800000);
+//        testIntegerType(2000000);
+//        testIntegerType(2200000);
+//        testIntegerType(2400000);
+//        testIntegerType(2600000);
+//        testIntegerType(2800000);
+//        testIntegerType(3000000);
     }
     
     static void testIntegerType(int numberOfRequiredNodes) {
