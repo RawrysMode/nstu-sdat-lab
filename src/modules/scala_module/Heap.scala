@@ -8,7 +8,7 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.jdk.CollectionConverters.BufferHasAsJava
 
-class Heap extends IHeap{
+class Heap extends IHeap {
   private var heapArray: ArrayBuffer[UserType] = new ArrayBuffer[UserType]()
   private var currentSize: Int = 0
   private val languageType = "Scala"
