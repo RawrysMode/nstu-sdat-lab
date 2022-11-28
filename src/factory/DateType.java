@@ -7,6 +7,9 @@ import java.util.Comparator;
 public class DateType implements UserType {
     private int year, month, day;
     public DateType() {
+        this.year = 1;
+        this.month = 1;
+        this.day = 1;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class DateType implements UserType {
             format.setLenient(false);
             format.parse(ss);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Something went wrong: " + e);
         }
 
         String[] string = ss.split("-");

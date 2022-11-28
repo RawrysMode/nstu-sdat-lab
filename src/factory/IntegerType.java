@@ -1,10 +1,14 @@
 package factory;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
 
 public class IntegerType implements UserType {
     private int value;
+
     public IntegerType() {
+        this.value = 0;
     }
 
     @Override
@@ -34,7 +38,8 @@ public class IntegerType implements UserType {
     }
 
     @Override
-    public Object parseValue(String ss) {
+    public Object parseValue(@NotNull String ss) {
+        if (ss.length() == 0) throw new NullPointerException();
         return value = Integer.parseInt(ss);
     }
 
