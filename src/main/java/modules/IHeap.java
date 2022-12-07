@@ -12,7 +12,7 @@ public interface IHeap {
     StringBuilder removeNode(int index);
     void displaceUp(int index);
     void displaceDown(int n, int index);
-    StringBuilder sort();
+    StringBuilder pyramidSort();
     StringBuilder sortToMaxHeap();
     StringBuilder getElementByIndex(int index);
     StringBuilder printArray();

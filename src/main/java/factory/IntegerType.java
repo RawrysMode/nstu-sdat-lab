@@ -11,6 +11,10 @@ public class IntegerType implements UserType {
         this.value = 0;
     }
 
+    public IntegerType(int value) {
+        this.value = value;
+    }
+
     @Override
     public String typeName() {
         return "integer";

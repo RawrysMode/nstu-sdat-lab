@@ -36,7 +36,7 @@ object Main extends App {
     }
 
     val heap: IHeap = new Heap(arrayList.toArray)
-    print(heap.sort)
+    print(heap.pyramidSort)
   }
 }
 

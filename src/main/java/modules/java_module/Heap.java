@@ -14,7 +14,7 @@ public class Heap implements IHeap {
         return "Java";
     }
 
-    public List<UserType> getHeapArray() {
+    public ArrayList<UserType> getHeapArray() {
         return heapArray;
     }
 
@@ -101,7 +101,7 @@ public class Heap implements IHeap {
         }
     }
 
-    public StringBuilder sort() {
+    public StringBuilder pyramidSort() {
         long startTime = System.nanoTime();
         sortToMaxHeap();
         for (int i = currentSize - 1; i >= 0; i--) {

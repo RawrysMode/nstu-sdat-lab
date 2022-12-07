@@ -2,7 +2,6 @@ package modules.kotlin_module
 
 import factory.UserFactory
 import factory.UserType
-import modules.GUI
 import modules.IHeap
 import java.util.*
 
@@ -35,5 +34,5 @@ private fun testIntegerType(numberOfRequiredNodes: Int) {
         arrayList.add(value)
     }
     val heap: IHeap = Heap(arrayList)
-    print(heap.sort())
+    print(heap.pyramidSort())
 }

@@ -97,7 +97,7 @@ class Heap extends IHeap {
     }
   }
 
-  def sort: StringBuilder = {
+  def pyramidSort: StringBuilder = {
     val startTime = System.nanoTime
     sortToMaxHeap
     for (i <- currentSize - 1 to 0 by -1) {

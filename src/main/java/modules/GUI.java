@@ -2,7 +2,6 @@ package modules;
 
 import factory.UserFactory;
 import factory.UserType;
-import modules.java_module.Heap;
 import utils.Serialization;
 
 import javax.swing.*;
@@ -119,7 +118,7 @@ public class GUI extends JFrame {
         clearButton.addActionListener(e -> heapOutputArea.setText(""));
         JButton defaultSortButton = new JButton("default sort");
         defaultSortButton.addActionListener(e -> {
-            heapOutputArea.append(String.valueOf(heap.sort()));
+            heapOutputArea.append(String.valueOf(heap.pyramidSort()));
             heapOutputArea.append(String.valueOf(heap.printArray()));
         });
         JButton maxHeapSortButton = new JButton("max-heap sort");

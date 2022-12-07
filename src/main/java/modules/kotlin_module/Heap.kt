@@ -88,7 +88,7 @@ class Heap (private var heapArray: ArrayList<UserType> = ArrayList(), private va
         }
     }
 
-    override fun sort(): StringBuilder? {
+    override fun pyramidSort(): StringBuilder? {
         val startTime = System.nanoTime()
         sortToMaxHeap()
         for (i in currentSize - 1 downTo 0) {
