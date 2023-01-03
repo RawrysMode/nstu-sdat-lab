@@ -5,9 +5,11 @@ import factory.UserType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-class HeapTest {
+public class DefectedHeapTest {
+
     public static ArrayList<UserType> createIntegerFilledArray(int numberOfInts) {
         ArrayList<UserType> arrayList = new ArrayList<>();
         for (int i = 0; i < numberOfInts; i++) {
@@ -16,32 +18,37 @@ class HeapTest {
         return arrayList;
     }
 
-    // Тестирование пирамидальной сортировки на изначально неупорядоченных, рандомно сгенерированных элементах
+    public static String arrayListToString(ArrayList<UserType> arrayList) {
+        return arrayList.stream().map(Object::toString)
+                .collect(Collectors.joining(" "));
+    }
+
+    // Тестирование пирамидальной сортировки на изначально неупорядоченных, рандомно сгенерированных эелементах
     @Test
     void pyramidSortingShouldReturnCorrectArrayOnInitiallyUnorderedRandomSetOfValues() {
         ArrayList<UserType> arrayList = createIntegerFilledArray(100000);
 
         Heap heap = new Heap(arrayList);
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
         arrayList.sort(arrayList.get(0).getTypeComparator());
 
         Assertions.assertEquals(
-                arrayList.toString(),
-                heap.getHeapArray().toString());
+                arrayListToString(arrayList),
+                arrayListToString(heap.getHeapArray()));
     }
 
     // Тестирование пирамидальной сортировки на изначально упорядоченных элементах
     @Test
     void pyramidSortingShouldReturnCorrectArrayOnInitiallyOrderedSetOfValues() {
         Heap heap = new Heap();
-        for (int i = 0; i < 100000; i++) {
-            heap.insertNode(new IntegerType().create());
+        for (int i = 0; i < 4; i++) {
+            heap.insertNode(new IntegerType(i));
         }
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
 
         Assertions.assertEquals(
-                heap.getHeapArray().toString(),
-                heap.getHeapArray().toString());
+                "0 1 2 3",
+                arrayListToString(heap.getHeapArray()));
     }
 
     // Тестирование сортировки на группе повторяющихся элементов
@@ -52,11 +59,11 @@ class HeapTest {
             heap.insertNode(new IntegerType(200));
         }
         heap.insertNode(new IntegerType(0));
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
 
         Assertions.assertEquals(
-                "[0, 200, 200, 200, 200]",
-                heap.getHeapArray().toString());
+                "0 200 200 200 200",
+                arrayListToString(heap.getHeapArray()));
     }
 
     // Тестирование сортировки на двух группах повторяющихся элементов
@@ -69,11 +76,11 @@ class HeapTest {
         for (int i = 0; i < 4; i++) {
             heap.insertNode(new IntegerType(200));
         }
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
 
         Assertions.assertEquals(
-                "[200, 200, 200, 200, 300, 300, 300, 300]",
-                heap.getHeapArray().toString());
+                "200 200 200 200 300 300 300 300",
+                arrayListToString(heap.getHeapArray()));
     }
 
     // Тестирование сортировки при экстремальном значении в начале
@@ -83,12 +90,12 @@ class HeapTest {
         arrayList.add(0, new IntegerType(Integer.MAX_VALUE));
 
         Heap heap = new Heap(arrayList);
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
         arrayList.sort(arrayList.get(0).getTypeComparator());
 
         Assertions.assertEquals(
-                arrayList.toString(),
-                heap.getHeapArray().toString());
+                arrayListToString(arrayList),
+                arrayListToString(heap.getHeapArray()));
     }
 
     // Тестирование сортировки при экстремальном значении в конце
@@ -98,12 +105,12 @@ class HeapTest {
         arrayList.add(new IntegerType(Integer.MAX_VALUE));
 
         Heap heap = new Heap(arrayList);
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
         arrayList.sort(arrayList.get(0).getTypeComparator());
 
         Assertions.assertEquals(
-                arrayList.toString(),
-                heap.getHeapArray().toString());
+                arrayListToString(arrayList),
+                arrayListToString(heap.getHeapArray()));
     }
 
     // Тестирование сортировки при экстремальном значении в середине
@@ -113,12 +120,12 @@ class HeapTest {
         arrayList.add(arrayList.size() / 2, new IntegerType(Integer.MAX_VALUE));
 
         Heap heap = new Heap(arrayList);
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
         arrayList.sort(arrayList.get(0).getTypeComparator());
 
         Assertions.assertEquals(
-                arrayList.toString(),
-                heap.getHeapArray().toString());
+                arrayListToString(arrayList),
+                arrayListToString(heap.getHeapArray()));
     }
 
     // Тестирование сортировки при нескольких экстремальных значениях
@@ -130,21 +137,11 @@ class HeapTest {
         arrayList.add(arrayList.size() / 2, new IntegerType(Integer.MAX_VALUE));
 
         Heap heap = new Heap(arrayList);
-        heap.pyramidSort();
+        heap.defectedPyramidSort();
         arrayList.sort(arrayList.get(0).getTypeComparator());
 
         Assertions.assertEquals(
-                arrayList.toString(),
-                heap.getHeapArray().toString());
-    }
-
-    /* testing on an increasing number of elements
-     * */
-    @Test
-    void test() {
-        for (int i = 10000; i <= 10240000; i *= 2) {
-            Heap heap = new Heap(createIntegerFilledArray(i));
-            System.out.println(heap.pyramidSort());
-        }
+                arrayListToString(arrayList),
+                arrayListToString(heap.getHeapArray()));
     }
 }
