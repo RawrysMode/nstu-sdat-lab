@@ -4,11 +4,11 @@ import factory.UserType;
 import modules.IHeap;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Heap implements IHeap {
     private int currentSize;
     private final ArrayList<UserType> heapArray;
+    Counter counter = new Counter();
 
     public String getLanguageType() {
         return "Java";
@@ -31,6 +31,7 @@ public class Heap implements IHeap {
     public StringBuilder insertNode(UserType userType) {
         heapArray.add(userType);
         displaceUp(currentSize++);
+        counter.increment();
         return new StringBuilder(" > inserted value: ")
                 .append(userType)
                 .append("\n");
@@ -47,6 +48,7 @@ public class Heap implements IHeap {
         } else {
             displaceUp(index);
         }
+        counter.increment();
         return new StringBuilder(" > value ")
                 .append(userType)
                 .append(" inserted at index [")
@@ -71,18 +73,22 @@ public class Heap implements IHeap {
                     .append(s)
                     .append(" has been removed \n");
         }
+        counter.increment();
         return new StringBuilder(" > something went wrong  \n");
     }
 
     public void displaceUp(int index) {
         int parentIndex = (index - 1) / 2;
         UserType bottom = heapArray.get(index);
-        while (index > 0 && bottom.getTypeComparator().compare(heapArray.get(parentIndex), bottom) < 0) {
+        while (index > 0 && bottom.getTypeComparator()
+                .compare(heapArray.get(parentIndex), bottom) < 0) {
             heapArray.set(index, heapArray.get(parentIndex));
             index = parentIndex;
             parentIndex = (parentIndex - 1) / 2;
+            counter.increment();
         }
         heapArray.set(index, bottom);
+        counter.increment();
     }
 
     public void displaceDown(int n, int index) {
@@ -99,6 +105,24 @@ public class Heap implements IHeap {
             heapArray.set(largerChild, object);
             displaceDown(n, largerChild);
         }
+        counter.increment();
+    }
+
+    public void defectedDisplaceDown(int n, int index) {
+        int largerChild = index;
+        int leftChild = 2 * index + 1;
+        int rightChild = leftChild + 1;
+        UserType object = heapArray.get(index);
+        // defect
+        if (leftChild < n && object.getTypeComparator().compare(heapArray.get(leftChild), heapArray.get(largerChild)) < 0)
+            largerChild = leftChild;
+        if (rightChild < n && object.getTypeComparator().compare(heapArray.get(rightChild), heapArray.get(largerChild)) > 0)
+            largerChild = rightChild;
+        if (largerChild != index) {
+            heapArray.set(index, heapArray.get(largerChild));
+            heapArray.set(largerChild, object);
+            defectedDisplaceDown(n, largerChild);
+        }
     }
 
     public StringBuilder pyramidSort() {
@@ -109,6 +133,26 @@ public class Heap implements IHeap {
             heapArray.set(0, heapArray.get(i));
             heapArray.set(i, object);
             displaceDown(i, 0);
+            counter.increment();
+        }
+        long elapsedTime = System.nanoTime() - startTime;
+        return new StringBuilder(" > elements sorted: ")
+                .append(currentSize)
+                .append(" | ")
+                .append(elapsedTime / 1000000)
+                .append(" milliseconds | ")
+                .append(counter.getCounter())
+                .append(" operations");
+    }
+
+    public StringBuilder defectedPyramidSort() {
+        long startTime = System.nanoTime();
+        sortToMaxHeap();
+        for (int i = currentSize - 1; i >= 0; i--) {
+            UserType object = heapArray.get(0);
+            heapArray.set(0, heapArray.get(i));
+            heapArray.set(i, object);
+            defectedDisplaceDown(i, 0);
         }
         long elapsedTime = System.nanoTime() - startTime;
         return new StringBuilder(" > elements sorted: ")
