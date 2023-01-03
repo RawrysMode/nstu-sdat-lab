@@ -32,8 +32,10 @@ public class IntegerType implements UserType {
     }
 
     @Override
-    public Object create() {
-        return new IntegerType();
+    public IntegerType create() {
+        final int start = -99999;
+        final int end = 99999;
+        return new IntegerType(start + (int) Math.round(Math.random() * (end - start)));
     }
 
     @Override
