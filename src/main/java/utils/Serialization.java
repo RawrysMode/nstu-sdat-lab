@@ -1,13 +1,15 @@
+package utils;
+
 import factory.UserFactory;
 import factory.UserType;
+import modules.IHeap;
 
 import java.io.*;
-import java.util.ArrayList;
 
 public class Serialization {
-    static String returnedValue;
+    public static String returnedValue;
 
-    public static String loadToFile(Heap heap){
+    public static String loadToFile(IHeap heap){
         String type;
         if (!heap.getHeapArray().isEmpty()){
             type = heap.getHeapArray().get(0).typeName();
@@ -24,20 +26,19 @@ public class Serialization {
         }
     }
 
-    public static Heap readFromFile(String filename) {
+    public static void readFromFile(String filename, IHeap heap) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String typeName = br.readLine();
             String lineOfItems = br.readLine();
             String[] items = lineOfItems.split(",");
+            heap.setCurrentSizeToZero();
 
-            ArrayList<UserType> arrayList = new ArrayList<>();
             for (String item : items) {
                 UserType object = UserFactory.getBuilderByName(typeName);
                 object.parseValue(item);
-                arrayList.add(object);
+                heap.insertNode(object);
             }
             returnedValue = " > data uploaded successfully\n";
-            return new Heap(arrayList);
         } catch (Exception e) {
             returnedValue = " > failed to load data from file file\n" + e;
             throw new RuntimeException(e);

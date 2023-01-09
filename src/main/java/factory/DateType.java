@@ -7,6 +7,9 @@ import java.util.Comparator;
 public class DateType implements UserType {
     private int year, month, day;
     public DateType() {
+        this.year = 1;
+        this.month = 1;
+        this.day = 1;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class DateType implements UserType {
             format.setLenient(false);
             format.parse(ss);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Something went wrong: " + e);
         }
 
         String[] string = ss.split("-");
@@ -55,12 +58,12 @@ public class DateType implements UserType {
     }
 
     @Override
-    public Comparator getTypeComparator() {
+    public Comparator<UserType> getTypeComparator() {
         return this;
     }
 
     @Override
-    public int compare(Object o1, Object o2) {
+    public int compare(UserType o1, UserType o2) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             if (sdf.parse(o1.toString()).before(sdf.parse(o2.toString()))) return -1; //o1 > o2 : 1

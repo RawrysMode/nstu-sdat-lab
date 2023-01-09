@@ -1,10 +1,18 @@
 package factory;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
 
 public class IntegerType implements UserType {
     private int value;
+
     public IntegerType() {
+        this.value = 0;
+    }
+
+    public IntegerType(int value) {
+        this.value = value;
     }
 
     @Override
@@ -24,8 +32,10 @@ public class IntegerType implements UserType {
     }
 
     @Override
-    public Object create() {
-        return new IntegerType();
+    public IntegerType create() {
+        final int start = -99999;
+        final int end = 99999;
+        return new IntegerType(start + (int) Math.round(Math.random() * (end - start)));
     }
 
     @Override
@@ -34,17 +44,18 @@ public class IntegerType implements UserType {
     }
 
     @Override
-    public Object parseValue(String ss) {
+    public Object parseValue(@NotNull String ss) {
+        if (ss.length() == 0) throw new NullPointerException();
         return value = Integer.parseInt(ss);
     }
 
     @Override
-    public Comparator getTypeComparator() {
+    public Comparator<UserType> getTypeComparator() {
         return this;
     }
 
     @Override
-    public int compare(Object o1, Object o2) {
+    public int compare(UserType o1, UserType o2) {
         return Integer.compare(((IntegerType) o1).value, ((IntegerType) o2).value); //o1 > o2 : 1
     }
 

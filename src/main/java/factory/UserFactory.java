@@ -7,12 +7,12 @@ import java.util.function.Supplier;
 
 public class UserFactory {
     public static ArrayList<String> getTypeNameList() {
-        return new ArrayList<>(Arrays.asList("integer", "datetime"));
+        return new ArrayList<>(Arrays.asList("integer", "date"));
     }
 
     private static final Map<String, Supplier<UserType>> factoryMap = Map.of(
             "integer", IntegerType::new,
-            "datetime", DateType::new
+            "date", DateType::new
     );
 
     public static UserType getBuilderByName(String name) {
